@@ -54,8 +54,6 @@ Record.prototype.Decrypt = function( key, data ) {
     try {
         data = AESDecrypt( data, key );
         // console.log(data);
-        data = data.toString(CryptoJS.enc.Utf8);
-        // console.log(data);
     }
     catch(err) {
         console.error(err);
