@@ -25,7 +25,7 @@ Record.prototype.HasError = function() {
     return ( this.error != null );
 }
 
-Record.prototype.Encrypt = function( key ) {
+Record.prototype.Encrypt = async function( key ) {
     for( var i = 0; i < this.entries.length; i++ ) {
         this.entries[i].is_new = false;
     }
@@ -35,24 +35,22 @@ Record.prototype.Encrypt = function( key ) {
     console.log( "Encrypting " + data.length + " bytes of record." );
     // console.log(data);
 
-    data = AESEncrypt( data, key );
+    return await AESEncrypt( data, key );
 
-    console.log( "Encrypted data is " + data.length + " bytes." );
+    // console.log( "Encrypted data is " + data.length + " bytes." );
     // console.log(data);
-
-    return data
 }
 
 Record.prototype.isValidData = function(data) {
     return ( data == "[]" || data.indexOf('"value"') != -1 );
 }
 
-Record.prototype.Decrypt = function( key, data ) {
+Record.prototype.Decrypt = async function( key, data ) {
     console.log( "Decrypting " + data.length + " bytes of record." );
     // console.log(data);
 
     try {
-        data = AESDecrypt( data, key );
+        data = await AESDecrypt( data, key );
         // console.log(data);
     }
     catch(err) {
@@ -72,12 +70,13 @@ Record.prototype.Decrypt = function( key, data ) {
         console.log( "Record has " + objects.length + " entries." );
         // console.log(data);
 
-        this.entries = [];
+        var entries = [];
         for( var i = 0; i < objects.length; i++ ) {
             var entry = TypeFactory(objects[i]);
             // console.log( "record.entries[" + i + "] = " + entry.TypeName() );
-            this.entries.push(entry);
+            entries.push(entry);
         }
+        return entries;
     }
 }
 

@@ -546,7 +546,7 @@ app.controller('PMController', ['$scope', function (scope) {
 
         scope.showLoader("Encrypting record ...", function(){
             // Execute asynchronously to not block the ui.
-            setTimeout( function() {
+            setTimeout(async function() {
                 var record = new Record(title);
                 for( var i = 0; i < entries.length; i++ ) {
                     var input = $(entries[i]);
@@ -564,8 +564,8 @@ app.controller('PMController', ['$scope', function (scope) {
 
                     record.AddEntry(new Entry( type, name, value));
                 }
-                var data = record.Encrypt( scope.key );
-                var size = data.length;
+                const data = await record.Encrypt( scope.key );
+                const size = data.length;
 
                 scope.progressAt = new Date();
                 scope.showLoader("Adding record ...", function(){
@@ -586,9 +586,10 @@ app.controller('PMController', ['$scope', function (scope) {
             scope.progressAt = new Date();
             scope.arc.GetRecordBuffer( secret.ID, function(data){
                 // start decrypting data when message is updated
-                scope.showLoader( "Decrypting data ...", function() {
+                scope.showLoader( "Decrypting data ...", async function() {
                     var record = new Record(secret.Title);
-                    record.Decrypt( scope.key, data );
+                    record.entries = await record.Decrypt( scope.key, data );
+
                     if( record.HasError() == true ) {
                         $('#record_error_' + secret.ID).html(record.error);
                         $('#record_status_' + secret.ID ).addClass("status-error");

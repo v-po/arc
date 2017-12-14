@@ -27,7 +27,7 @@ function generatePassword( length, charset ) {
         // Math.random() is not cryptographically secure, while CryptoJS
         // is using Donald Knuth's linear congruential pseudo-random 
         // number generator -> https://github.com/brix/crypto-js/issues/7
-        var random_word = CryptoJS.lib.WordArray.random(1).words[0]
+        var random_word = window.crypto.getRandomValues(new Uint8Array(1))[0];
         var random_index = Math.abs(random_word) % nsymbols;
 
         pass += charset.charAt(random_index);

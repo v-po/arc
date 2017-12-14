@@ -39,6 +39,7 @@ function base64ToBuffer(base64) {
     return binaryStringToBuffer(binstr);
 }
 
+// TODO: remove utf8ToBuffer
 function strToUint8(myString){
     return "TextEncoder" in window ? new TextEncoder("utf-8").encode(myString) : utf8ToBuffer(myString);
 }
@@ -78,6 +79,13 @@ function bufferToBase64(arr) {
     return btoa(binstr);
 }
 
+function bufferToBase64_2(arrayBuffer) {
+    return btoa(new Uint8Array(arrayBuffer)
+            .reduce((data, byte) => data + String.fromCharCode(byte), '')
+    );
+}
+
+// TODO: remove bufferToUtf8()
 function uint8ToStr(uint8array){
     return "TextDecoder" in window ? new TextDecoder("utf-8").decode(uint8array) : bufferToUtf8(uint8array);
 }
